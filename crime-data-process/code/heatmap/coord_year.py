@@ -13,7 +13,7 @@ if __name__ == "__main__":
 		.map(lambda x: (x[21] + ',' + x[22], 1) if len(x) > 22 and x[21] and x[22] and x[1] and x[1].split('/')[2] == year and x[11] and (level == 'ALL' or x[11] == level) else ('outliers', 1)) \
 		.filter(lambda (x, y): x != 'outliers') \
 		.reduceByKey(lambda x, y: x + y) \
-		.map(lambda (x, y): x)
+		.map(lambda (x, y): x + ',0')
 	result.saveAsTextFile('result.out')
 	sc.stop()	
 
