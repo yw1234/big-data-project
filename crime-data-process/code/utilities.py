@@ -9,11 +9,10 @@ time_format = '%H:%M:%S'
 regex_3_digits = '^\d{3}$'
 
 ######Functions
-
 def checkNull(string):
     #Assume Unicode String
     # Step 1: Check for length 0 i.e '' field
-    if len(string)==0:
+    if len(string.strip())==0:
         return 'NULL'
     # Step 2: Check for 'nan'
     elif string=='nan':
@@ -21,22 +20,29 @@ def checkNull(string):
     else:
         return 'VALID'
 
+# If date is in wrong format it would not be sucessfully converted to datetime object.
 def checkDate(line,date_format=date_format):
-    try:
-        date = datetime.datetime.strptime(line,date_format)
-        if (date.year <= 2015) & (date.year >= 2006):
-            return 'VALID'
-        else:
+    if checkNull(line)=='VALID':
+        try:
+            date = datetime.datetime.strptime(line,date_format)
+            if (date.year <=2015)&(date.year>=2005):
+                return 'VALID'
+            else:
+                return 'INVALID'
+        except:
             return 'INVALID'
-    except:
-        return 'INVALID'
-    
+    else:
+        return 'NULL'
 def checkTime(line,time_format=time_format):
-    try:
-        datetime.datetime.strptime(line,time_format)
-        return 'VALID'
-    except:
-        return 'INVALID'
+    if checkNull(line)=='VALID':
+        try:
+            datetime.datetime.strptime(line,time_format)
+            return 'VALID'
+        except:
+            return 'INVALID'
+    else:
+        return 'NULL'
+########################################
     
 def checkRegex(line,regex):
     # Input
@@ -51,43 +57,43 @@ def checkRegex(line,regex):
 # Implementation
 # check_CMPLNT_TO check both CMPLNT_TO_DT and CMPLNT_TO_TM at the same time
 # It return the validity of both field
+# Implementation
+# check_CMPLNT_TO check both CMPLNT_TO_DT and CMPLNT_TO_TM at the same time
+# It return the validity of both field
 def check_FR_TO(from_date,from_time,to_date,to_time,date_format,time_format):
     ###########
     #Null check
     ###########
-    from_nullity = [checkNull(from_date),checkNull(from_time)]
-    to_nullity = [checkNull(to_date),checkNull(to_time)]
-    # If from datetime is NULL, return all NULL
-    if 'NULL' in from_nullity:
-        return ['NULL','NULL','NULL','NULL']
-    elif 'NULL' in to_nullity:
-        if 'INVALID' in [checkDate(from_date),checkTime(from_time)]:
-            return ['INVALID','INVALID','NULL','NULL']
-        else:
-            return ['VALID','VALID','NULL','NULL']
+    individual_checks = [checkDate(from_date),checkTime(from_time),checkDate(to_date),checkTime(to_time)]
+    if 'NULL' in individual_checks:
+        return individual_checks
+#         if 'NULL' in individual_checks[:2]:
+#             individual_checks = ['NULL','NULL','NULL','NULL']
+#             return individual_checks
+#         if 'NULL' in individual_checks[2:4]:
+#             return individual_checks
     #Check for invalidity
-    #If any field format is invalid return invalid for both
-    elif ('INVALID' in [checkDate(x) for x in [from_date,to_date]])|('INVALID' in [checkTime(x) for x in [from_time,to_time]]):
-        return ['INVALID','INVALID','INVALID','INVALID']    
+    #If any field format is invalid return individual check
+    elif 'INVALID' in individual_checks:
+        return individual_checks
     else:
+        #ALL VALID for individual check
         ###Start combining
         #Define datetime format
         datetime_format = date_format+' '+time_format
         from_datetime = datetime.datetime.strptime(from_date+' '+from_time,datetime_format)
         to_datetime = datetime.datetime.strptime(from_date+' '+from_time,datetime_format)
-        if from_datetime <= to_datetime:
-            return ['VALID','VALID','VALID','VALID']
+        if from_datetime>to_datetime:
+            return ['VALID','VALID','INVALID','INVALID'] 
         else:
-            # Or ['INVALID','INVALID','INVALID','INVALID']? Open for discussion
-            
-            return ['VALID','VALID','INVALID','INVALID']      
+            return individual_checks    
     
 
 def checkCaseStatus(line):
     # check the validation of column offense descrption
     if checkNull(line) == 'VALID':
         if (line == 'COMPLETED' or line == 'ATTEMPTED'):
-	    return 'VALID'
+            return 'VALID'
         else:
             return 'INVALID'
     else: 
@@ -136,7 +142,7 @@ def checkLatitude(lat):
     # check the validation of latitude
     lat_range = [40.48, 40.9]
     if checkNull(lat) == 'VALID':
-        if checkNumber(lat) and lat > lat_range[0] and lat < lat_range[1]:
+        if checkNumber(lat) and float(lat) > lat_range[0] and float(lat) < lat_range[1]:
             return 'VALID'
         else:
             return 'INVALID'
@@ -146,8 +152,8 @@ def checkLatitude(lat):
 def checkLongitude(lon):
     # check the validation of longitude
     lon_range = [-74.3, -73.6]
-    if checkNull(lat) == 'VALID':
-        if checkNumber(lon) and lon > lon_range[0] and lon < lon_range[1]:
+    if checkNull(lon) == 'VALID':
+        if checkNumber(lon) and float(lon) > lon_range[0] and float(lon) < lon_range[1]:
             return 'VALID'
         else:
             return 'INVALID'
