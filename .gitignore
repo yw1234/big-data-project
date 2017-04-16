@@ -16,3 +16,15 @@ metastore_db/service.properties
 metastore_db/log/logmirror.ctrl
 
 metastore_db/dbex.lck
+
+*.lck
+
+*.ctrl
+
+crime-data-process/code/heatmap/metastore_db/log/README_DO_NOT_TOUCH_FILES.txt
+
+crime-data-process/code/heatmap/metastore_db/README_DO_NOT_TOUCH_FILES.txt
+
+crime-data-process/code/heatmap/metastore_db/seg0/README_DO_NOT_TOUCH_FILES.txt
+
+crime-data-process/code/heatmap/metastore_db/service.properties
