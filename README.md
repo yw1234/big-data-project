@@ -21,3 +21,5 @@ Run the source code file as the following command:
 - spark-submit --num-executors {how many executors you want to use, usually I set 8} {url of your python file, like crime-data-process/code/level_year.py} /user/wy609/nyc-crimes.csv
 
 The name of each source file is the {key1}_{key2}.py. For instance level_year.py, means that we use the the offense level and year as the key and get the count of how many crimes happened at the {key1} level in {key2} year.
+
+The file for column validation is utilities.py. We define sort of check function to judge whether the data is valid in specific column.
