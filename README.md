@@ -8,7 +8,9 @@ Investigate the correlation between crime density and other features.
 
 Google doc link: https://docs.google.com/document/d/1MoKjDjf2Nl-n7hrU6_UZD8Sj0PGedPebgnvanD5CA2M/edit?ts=58d45a49
 
-## How to run
+## How to Run
+
+#### Data Process Code
 
 We use Spark as the data process tool, the dataset is put onto HDFS, the url is /user/wy609/nyc-crimes.csv. 
 
