@@ -12,6 +12,7 @@ if __name__ == "__main__":
 		.map(lambda x: (x[1], 1) if x[16] and x[16] in outside and x[1] and int(x[1].split('/')[2]) == 2011 else ('outliers', 1)) \
 		.filter(lambda (x, y): x != 'outliers') \
 		.reduceByKey(lambda x, y: x + y) \
+                .sortByKey() \
 		.map(lambda (x, y):  x + '\t' + str(y))
 	result.saveAsTextFile('result.out')
 	sc.stop()	
