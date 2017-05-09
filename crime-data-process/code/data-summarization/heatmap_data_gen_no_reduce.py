@@ -13,7 +13,7 @@ if __name__ == "__main__":
 		.filter(lambda (x, y): x != 'outliers') \
 		.map(lambda (x, y): (y, x)) \
 		.sortByKey(False) \
-		.map(lambda (x, y): y + ',' + str(x))
+		.map(lambda (x, y):'[' + y + '],')
 		
 	result.saveAsTextFile('result.out')
 	sc.stop()	
