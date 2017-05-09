@@ -22,9 +22,8 @@ if __name__ == "__main__":
 	sc = SparkContext()
 	lines = sc.textFile(','.join(sys.argv[1:]))
 	result = lines.mapPartitions(lambda x: reader(x)) \
-                .filter(lambda x: x[21].strip() != '000000' and x[2][1:5] == '2011') \
-		.map(lambda x: (formatYear(x[2]), x[3].strip() + ', ' + formatWeather(x[21].strip())) if x[2] and x[3] and x[2] else ('outliers', 1)) \
-		.filter(lambda (x, y): x != 'outliers') \
+		.map(lambda x: (formatYear(x[2]), x[3].strip() + ',' + x[19].strip()) if x[2] and x[3] and x[2] else ('outliers', 1)) \
+		.filter(lambda (x, y): x != 'outliers' and x[:4] == '2011') \
                 .sortByKey() \
                 .map(lambda (x, y): x + '\t' + y)
 	result.saveAsTextFile('result.out')
